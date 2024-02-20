@@ -1,0 +1,60 @@
+UserController 
+
+Singup - (Name , Email , password , typeOfUser)
+Singin - (Name , password)
+
+
+2 . Find the zaveraghe rating of a prouct
+
+
+db.products.aggregate([
+    {
+        $unwind : "$rating"
+    }
+    {
+        $group :{
+            _id : "$name",
+            aveareRating :{ $ang : "$rating.rate" }
+        }
+    }
+])
+
+db.products.aggregate([
+    {
+        $unwind : "$rating"
+    }
+    {
+        $group :{
+            _id : "$name",
+            aveareRating :{ $ang : "$rating.rate" }
+        }
+    }
+])
+
+counting  no of  rating
+
+db.products.aggregate([
+    { $unwind: "$rating" },
+    { $group: {
+        _id: "$name",
+        countingRating: { $sum: 1 } // Increment the counter for each occurrence
+    }}
+])
+
+another way  cnuting 
+
+db.products.aggregate([
+   {
+     $project :{name : 1 ,  countOfrating :{
+        $cond :{ if : {$isArray : "rating"}
+        , then :{$size : "rating"} ,else : 0 }
+     } }
+   },
+   {
+    $sort : {countOfrating ": - 1}   // sorting in descending oreder
+   }
+   {
+    limit : 1
+   }
+
+])
